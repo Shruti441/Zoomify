@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In </title>
+    <style>
+        /* Styles for modal */
+        .modal {
+            display: none; /* Hide the modal by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* Center modal vertically and horizontally */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        /* Close button styles */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sign in button -->
+<button onclick="openSignInModal()">Sign In</button>
+
+<!-- The Sign In Modal -->
+<div id="signInModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <!-- Close button -->
+        <span class="close" onclick="closeSignInModal()">&times;</span>
+        <!-- Sign in form -->
+        <h2>Sign In</h2>
+        <form>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"><br><br>
+            <button type="submit">Submit</button>
+            <!-- Forgot Password link -->
+            <a href="#" onclick="openForgotPasswordModal()">Forgot Password?</a>
+        </form>
+    </div>
+</div>
+
+<!-- The Forgot Password Modal -->
+<div id="forgotPasswordModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <!-- Close button -->
+        <span class="close" onclick="closeForgotPasswordModal()">&times;</span>
+        <!-- Forgot Password form -->
+        <h2>Forgot Password</h2>
+        <p>Enter your email address below to receive instructions on how to reset your password.</p>
+        <form>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email"><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to open the sign-in modal
+    function openSignInModal() {
+        document.getElementById('signInModal').style.display = "block"; // Show the modal
+    }
+
+    // Function to close the sign-in modal
+    function closeSignInModal() {
+        document.getElementById('signInModal').style.display = "none"; // Hide the modal
+    }
+
+    // Function to open the forgot password modal
+    function openForgotPasswordModal() {
+        closeSignInModal(); // Close the sign-in modal
+        document.getElementById('forgotPasswordModal').style.display = "block"; // Show the modal
+    }
+
+    // Function to close the forgot password modal
+    function closeForgotPasswordModal() {
+        document.getElementById('forgotPasswordModal').style.display = "none"; // Hide the modal
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        var modals = document.getElementsByClassName('modal');
+        for (var i = 0; i < modals.length; i++) {
+            if (event.target == modals[i]) {
+                modals[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
