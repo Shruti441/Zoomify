@@ -5,63 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Or Join Meeting</title>
+    <link rel="icon"  href="public/Assets/images/zoom-meet-icon.png">
+
     <link rel="stylesheet" href="public/Assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="public/Assets/css/style.css">
-    <style>
-        body{
-            overflow: hidden;
-            background-color: #7ac7f3;
-        }
-        /* Style for the modal */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-       /* Modal content */
-        .modal-content {
-            background-color: #fefefe;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 40%; /* Width set to 40% */
-            height: 60vh; /* Height set to 60% of viewport height */
-            box-sizing: border-box;
-            overflow-y: auto; /* Enable vertical scroll if needed */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Close button */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 
 </head>
 <body style="padding-top: 3.5rem;">
     <nav class="navbar navbar-expand-md fixed-top">
         <img src="public/assets/images/zoom-meet-icon.png" class="logo" alt="">
-        <a href="#" class="navbar-brand text-dark">Zoomify</a>
+        <a href="#" class="navbar-brand text-light">Zoomify</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -75,16 +29,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav mr-0">
-                <li class="nav-item sign-in display-center">
-                    <!-- <a href="#" class="nav-link">Sign In</a> -->
-                    <button class="btn btn-outline-secondary btn-sm text-info font-weight-bold join-meeting">Sign In</button>
-                    
+                
+                <li class="nav-item">
+                    <button class="btn btn-outline-secondary btn-lg text-info font-weight-bold join-meeting" >Join the meeting</button>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-outline-secondary btn-sm text-info font-weight-bold join-meeting">Join the meeting</button>
-                </li>
-                <li class="nav-item">
-                    <button class="btn btn-sm btn-info text-light font-weight-bold new-meeting">Start a meeting</button>
+                    <button class="btn btn-lg btn-info text-light font-weight-bold new-meeting">Start a meeting</button>
                 </li>
             </ul>
         </div>
@@ -92,35 +42,26 @@
     <main>
         <div class="jumbotron h-100 d-flex">
             <div class="container w-50">
-                <h2 style="font-size: 3rem;"> Premium video meeting. Now it is available for free to everyone. </h2>
+                <h1 style="font-size: 3rem;"> Premium video meeting. Now it is available for free to everyone. </h1>
                 <p style="font-size: 20px;">
-                    We're redesigning the Zoom Meet service for secure business meetings and making it free for everyone to use.
+                    We're redesigning the Zoomify service for secure business meetings and making it free for everyone to use.
                 </p>
                 <ul class="display-center justify-content-start" >
                     <li style="padding: 0;">
-                        <button class="btn btn-primary text-light font-weight-bold display-center new-meeting" style="background-color: #5ebcf3;"><span class="material-icons mr-2">video_call</span>New Meeting</button>
+                        <button class="btn btn-lg text-light font-weight-bold display-center new-meeting" style="background-color:  rgb(19, 180, 192);"><span class="material-icons mr-2">video_call</span>New Meeting</button>
                     </li>
                     <li class="pl-3">
-                        <button class="btn btn-primary btn-outline-secondary text-dark font-weight-bold display-center" style="background-color: #ffffff;"><span class="material-icons mr-2">keyboard</span><input type="text" placeholder="Enter a code" style="border: none;" class="enter-code"></button>
+                        <button class="btn btn-outline-secondary text-dark font-weight-bold display-center" style="background-color: #ffffff;  box-shadow: 5px 10px 8px #888888; border: 2px solid black;"><span class="material-icons mr-2">keyboard</span><input type="text" placeholder="Enter a code" style="border: none;" class="enter-code"></button>
                     </li>
-                    <li class="text-dark font-weight-bold cursor-pointer pl-2 join-action">Join</li>
+                    <li class="text-dark font-weight-bold cursor-pointer pl-2  ml-2  join-action">Join</li>
                 </ul>
             </div>
             <div class="container w-50">
                 <img src="public/Assets/images/zoom-meet-people.jpg" alt="" class="signin-image">
             </div>
         </div>
-        <!-- Sign in form popup -->
-        <div id="login-modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <!-- Login form content -->
-                <iframe id="login-iframe" src="" frameborder="0" width="100%" height="100%"></iframe>
-            </div>
-        </div>
-
     </main>
-    <footer class="container"><h6>Learn more about <span class="learn-more text-info">zoomify</span> .</h6></footer>
+    <footer class="container"><h6>Learn more about <span class="learn-more text-info">Zoomify</span> .</h6></footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(function(){
@@ -140,66 +81,5 @@
 
         })
     </script>
-     <script>
-        // Get the modal element
-        var modal = document.getElementById("login-modal");
-
-        // Get the button that opens the modal
-        var signInLink = document.getElementById("signin-link");
-
-        // When the user clicks on the sign-in link, open the modal
-        signInLink.onclick = function() {
-            // Set the source of the iframe to the login form page
-            document.getElementById("login-iframe").src = "form.html";
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        function closeModal() {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-
-<script>
-    // Function to open the sign-in modal
-    function openSignInModal() {
-        document.getElementById('signInModal').style.display = "block"; // Show the modal
-    }
-
-    // Function to close the sign-in modal
-    function closeSignInModal() {
-        document.getElementById('signInModal').style.display = "none"; // Hide the modal
-    }
-
-    // Function to open the forgot password modal
-    function openForgotPasswordModal() {
-        closeSignInModal(); // Close the sign-in modal
-        document.getElementById('forgotPasswordModal').style.display = "block"; // Show the modal
-    }
-
-    // Function to close the forgot password modal
-    function closeForgotPasswordModal() {
-        document.getElementById('forgotPasswordModal').style.display = "none"; // Hide the modal
-    }
-
-    // Close the modal when clicking outside of it
-    window.onclick = function(event) {
-        var modals = document.getElementsByClassName('modal');
-        for (var i = 0; i < modals.length; i++) {
-            if (event.target == modals[i]) {
-                modals[i].style.display = "none";
-            }
-        }
-    }
-</script>
-
 </body>
 </html>
-

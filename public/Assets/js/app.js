@@ -560,11 +560,7 @@ var MyApp = (function () {
         display: "block",
       })
       .html(
-        '<div class="top-box align-vertical-middle profile-dialogue-show">
-         <h4 class="mt-3" style="text-align:center;color:white;">Leave Meeting</h4> <hr> 
-         <div class="call-leave-cancel-action d-flex justify-content-center align-items-center w-100"> 
-         <a href="/action.html"><button class="call-leave-action btn btn-danger mr-5">Leave</button></a> 
-         <button class="call-cancel-action btn btn-secondary">Cancel</button> </div> </div>'
+        '<div class="top-box align-vertical-middle profile-dialogue-show"> <h4 class="mt-3" style="text-align:center;color:white;">Leave Meeting</h4> <hr> <div class="call-leave-cancel-action d-flex justify-content-center align-items-center w-100"> <a href="/action.html"><button class="call-leave-action btn btn-danger mr-5">Leave</button></a> <button class="call-cancel-action btn btn-secondary">Cancel</button> </div> </div>'
       );
   });
   $(document).mouseup(function (e) {

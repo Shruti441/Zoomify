@@ -6,12 +6,8 @@ var server = app.listen(3000, function () {
 });
 const fs = require("fs");
 const fileUpload = require("express-fileupload");
-// const io = require("socket.io")(server, {
-//   allowEIO3: true, // false by default
-// });
-
 const io = require("socket.io")(server, {
-  cors: { origin: "http://127.0.0.1/:5173" },
+  allowEIO3: true, // false by default
 });
 app.use(express.static(path.join(__dirname, "")));
 var userConnections = [];
