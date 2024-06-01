@@ -17,7 +17,10 @@ ul{
 
 nav{
     background-color: rgb(19, 180, 192);
+    display: flex;
+    z-index: -1;
 }
+
 .navbar-brand{
     font-size: 37px;
     padding-left: 10px;

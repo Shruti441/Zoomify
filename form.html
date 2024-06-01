@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        .container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .container .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .container input[type="email"],
+        .container input[type="password"],
+        .container input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .container button {
+            width: 100%;
+            background-color: #4285f4;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+        .container button:hover {
+            background-color: #357ae8;
+        }
+        .container .link {
+            color: #4285f4;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .container .toggle-password {
+            cursor: pointer;
+            color: #4285f4;
+            float: right;
+            margin-top: -28px;
+            margin-right: 10px;
+        }
+        .g-signin2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- Sign-In Form -->
+        <div id="signin-form">
+            <h2>Sign In</h2>
+            <div class="form-group">
+                <label for="signin-email">Email:</label>
+                <input type="email" id="signin-email" required>
+            </div>
+            <div class="form-group">
+                <label for="signin-password">Password:</label>
+                <input type="password" id="signin-password" required>
+                <span class="toggle-password" id="toggle-signin-password">👁️</span>
+            </div>
+            <button type="button" id="signin-btn">Sign In</button>
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+            <div class="link" id="show-signup">Don't have an account? Sign Up</div>
+        </div>
+        <!-- Sign-Up Form -->
+        <div id="signup-form" style="display:none;">
+            <h2>Sign Up</h2>
+            <div class="form-group">
+                <label for="signup-username">Username:</label>
+                <input type="text" id="signup-username" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-email">Email:</label>
+                <input type="email" id="signup-email" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password:</label>
+                <input type="password" id="signup-password" required>
+                <span class="toggle-password" id="toggle-signup-password">👁️</span>
+            </div>
+            <button type="button" id="signup-btn">Sign Up</button>
+            <div class="link" id="show-signin">Already have an account? Sign In</div>
+        </div>
+    </div>
+    <script>
+        // Toggle password visibility
+        document.getElementById('toggle-signin-password').addEventListener('click', function() {
+            var passwordField = document.getElementById('signin-password');
+            var passwordFieldType = passwordField.getAttribute('type');
+            if (passwordFieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+                this.textContent = '🙈';
+            } else {
+                passwordField.setAttribute('type', 'password');
+                this.textContent = '👁️';
+            }
+        });
+
+        document.getElementById('toggle-signup-password').addEventListener('click', function() {
+            var passwordField = document.getElementById('signup-password');
+            var passwordFieldType = passwordField.getAttribute('type');
+            if (passwordFieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+                this.textContent = '🙈';
+            } else {
+                passwordField.setAttribute('type', 'password');
+                this.textContent = '👁️';
+            }
+        });
+
+        // Show Sign-Up Form
+        document.getElementById('show-signup').addEventListener('click', function() {
+            document.getElementById('signin-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        });
+
+        // Show Sign-In Form
+        document.getElementById('show-signin').addEventListener('click', function() {
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('signin-form').style.display = 'block';
+        });
+
+        // Handle Sign-In
+        document.getElementById('signin-btn').addEventListener('click', function() {
+            var email = document.getElementById('signin-email').value;
+            var password = document.getElementById('signin-password').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('User authenticated');
+                    // Redirect or perform any other action
+                } else {
+                    alert('Invalid email or password');
+                }
+            };
+            xhr.send(JSON.stringify({ email: email, password: password }));
+        });
+
+        // Handle Sign-Up
+        document.getElementById('signup-btn').addEventListener('click', function() {
+            var username = document.getElementById('signup-username').value;
+            var email = document.getElementById('signup-email').value;
+            var password = document.getElementById('signup-password').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/signup');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('User registered');
+                    // Show sign-in form
+                    document.getElementById('show-signin').click();
+                } else {
+                    alert('Error registering user');
+                }
+            };
+            xhr.send(JSON.stringify({ username: username, email: email, password: password }));
+        });
+        // google sign in 
+        function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    var id_token = googleUser.getAuthResponse().id_token;
+
+    console.log('ID: ' + profile.getId());
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail());
+
+    // Send the ID token to your server
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/google-signin');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log('User authenticated with Google');
+            alert('User authenticated with Google');
+            // Redirect or perform any other action
+        } else {
+            console.error('Error authenticating with Google');
+        }
+    };
+    xhr.send(JSON.stringify({ id_token: id_token }));
+}
+
+    </script>
+     <script>
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log(id_token); // For debugging
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/google-signin');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('User authenticated with Google');
+                    // Handle successful authentication (e.g., redirect to another page)
+                } else {
+                    console.error('Error during Google authentication');
+                }
+            };
+            xhr.send(JSON.stringify({ id_token: id_token }));
+        }
+    </script>
+</body>
+</html>

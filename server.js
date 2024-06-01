@@ -1,15 +1,127 @@
 const express = require("express");
 const path = require("path");
-var app = express();
-var server = app.listen(3000, function () {
-  console.log("Listening on port 3000");
-});
+const mysql = require('mysql');
+const bodyParser = require('body-parser');
 const fs = require("fs");
 const fileUpload = require("express-fileupload");
+
+const app = express();
+const server = app.listen(3000, function () {
+  console.log("Listening on port 3000");
+});
+
 const io = require("socket.io")(server, {
   allowEIO3: true, // false by default
 });
+
 app.use(express.static(path.join(__dirname, "")));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(fileUpload());
+
+// Create connection to MySQL database
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'zoomify'
+});
+
+// Connect to MySQL
+db.connect((err) => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('MySQL connected...');
+});
+
+
+// Route to handle sign-up
+app.post('/signup', (req, res) => {
+  const { username, email, password } = req.body;
+  const sqlInsert = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
+  db.query(sqlInsert, [username, email, password], (err, result) => {
+    if (err) {
+      console.error('Error inserting user into database:', err);
+      res.status(500).send('Error inserting user into database');
+      return;
+    }
+    console.log('User inserted into database');
+    res.status(200).send('User inserted into database');
+  });
+});
+
+// Route to handle sign-in
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const sqlSelect = 'SELECT * FROM signup WHERE email = ? AND password = ?';
+  db.query(sqlSelect, [email, password], (err, results) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      res.status(500).send('Error querying database');
+      return;
+    }
+    if (results.length > 0) {
+      console.log('User authenticated');
+      res.status(200).send('User authenticated');
+    } else {
+      console.log('Invalid email or password');
+      res.status(401).send('Invalid email or password');
+    }
+  });
+});
+
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client('69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com');
+
+async function verify(token) {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: '69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com',
+    });
+    const payload = ticket.getPayload();
+    return payload;
+}
+
+app.post('/google-signin', async (req, res) => {
+    const token = req.body.id_token;
+    try {
+        const payload = await verify(token);
+        const { email, name, sub: googleId } = payload;
+
+        // Check if user exists in the database
+        const sqlSelect = 'SELECT * FROM signup WHERE email = ? OR google_id = ?';
+        db.query(sqlSelect, [email, googleId], (err, results) => {
+            if (err) {
+                console.error('Error querying database:', err);
+                res.status(500).send('Error querying database');
+                return;
+            }
+            if (results.length > 0) {
+                // User exists, authenticate
+                console.log('User authenticated with Google');
+                res.status(200).send('User authenticated with Google');
+            } else {
+                // User does not exist, register the user
+                const sqlInsert = 'INSERT INTO signup (username, email, google_id) VALUES (?, ?, ?)';
+                db.query(sqlInsert, [name, email, googleId], (err, result) => {
+                    if (err) {
+                        console.error('Error inserting user into database:', err);
+                        res.status(500).send('Error inserting user into database');
+                        return;
+                    }
+                    console.log('User registered with Google');
+                    res.status(200).send('User registered with Google');
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        res.status(500).send('Error verifying token');
+    }
+});
+
 var userConnections = [];
 io.on("connection", (socket) => {
   console.log("socket id is ", socket.id);
@@ -92,15 +204,12 @@ io.on("connection", (socket) => {
     }
   });
 
-  // <!-- .....................HandRaise .................-->
+  // HandRaise
   socket.on("sendHandRaise", function (data) {
     var senderID = userConnections.find((p) => p.connectionId == socket.id);
     console.log("senderID :", senderID.meeting_id);
     if (senderID.meeting_id) {
       var meetingid = senderID.meeting_id;
-      // userConnections = userConnections.filter(
-      //   (p) => p.connectionId != socket.id
-      // );
       var list = userConnections.filter((p) => p.meeting_id == meetingid);
       list.forEach((v) => {
         var userNumberAfUserLeave = userConnections.length;
@@ -111,10 +220,8 @@ io.on("connection", (socket) => {
       });
     }
   });
-  // <!-- .....................HandRaise .................-->
 });
 
-app.use(fileUpload());
 app.post("/attachimg", function (req, res) {
   var data = req.body;
   var imageFile = req.files.zipfile;
@@ -129,8 +236,10 @@ app.post("/attachimg", function (req, res) {
     function (error) {
       if (error) {
         console.log("couldn't upload the image file , error: ", error);
+        res.status(500).send('Error uploading file');
       } else {
         console.log("Image file successfully uploaded");
+        res.status(200).send('File uploaded');
       }
     }
   );
