@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <meta name="google-signin-client_id" content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
-    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
+    <meta name="google-signin-client_id"
+        content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
-        
+
     </script>
     <style>
         body {
@@ -22,6 +24,7 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
         }
+
         .container {
             background-color: #fff;
             padding: 40px;
@@ -30,21 +33,25 @@
             width: 400px;
             text-align: center;
         }
+
         .container h2 {
             margin-bottom: 20px;
             font-size: 24px;
             color: #333;
         }
+
         .container .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
+
         .container label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
         }
+
         .container input[type="email"],
         .container input[type="password"],
         .container input[type="text"] {
@@ -55,6 +62,7 @@
             box-sizing: border-box;
             font-size: 14px;
         }
+
         .container button {
             width: 100%;
             background-color: #4285f4;
@@ -67,14 +75,17 @@
             margin-bottom: 10px;
             transition: background-color 0.3s;
         }
+
         .container button:hover {
             background-color: #357ae8;
         }
+
         .container .link {
             color: #4285f4;
             cursor: pointer;
             font-size: 14px;
         }
+
         .container .toggle-password {
             cursor: pointer;
             color: #4285f4;
@@ -82,19 +93,23 @@
             margin-top: -28px;
             margin-right: 10px;
         }
+
         .g-signin2 {
             margin-bottom: 10px;
         }
+
         #profile-container {
             display: none;
             position: relative;
         }
+
         #profile-pic {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
         }
+
         #dropdown-menu {
             display: none;
             position: absolute;
@@ -106,17 +121,20 @@
             text-align: left;
             z-index: 1000;
         }
+
         #dropdown-menu a {
             display: block;
             padding: 10px;
             text-decoration: none;
             color: #333;
         }
+
         #dropdown-menu a:hover {
             background-color: #f8f9fa;
         }
     </style>
 </head>
+
 <body>
     <div class="container" id="container">
         <!-- Sign-In Form -->
@@ -165,7 +183,7 @@
     </div>
     <script>
         // Toggle password visibility
-        document.getElementById('toggle-signin-password').addEventListener('click', function() {
+        document.getElementById('toggle-signin-password').addEventListener('click', function () {
             var passwordField = document.getElementById('signin-password');
             var passwordFieldType = passwordField.getAttribute('type');
             if (passwordFieldType === 'password') {
@@ -177,7 +195,7 @@
             }
         });
 
-        document.getElementById('toggle-signup-password').addEventListener('click', function() {
+        document.getElementById('toggle-signup-password').addEventListener('click', function () {
             var passwordField = document.getElementById('signup-password');
             var passwordFieldType = passwordField.getAttribute('type');
             if (passwordFieldType === 'password') {
@@ -190,29 +208,37 @@
         });
 
         // Show Sign-Up Form
-        document.getElementById('show-signup').addEventListener('click', function() {
+        document.getElementById('show-signup').addEventListener('click', function () {
             document.getElementById('signin-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'block';
         });
 
         // Show Sign-In Form
-        document.getElementById('show-signin').addEventListener('click', function() {
+        document.getElementById('show-signin').addEventListener('click', function () {
             document.getElementById('signup-form').style.display = 'none';
             document.getElementById('signin-form').style.display = 'block';
         });
 
         // Handle Sign-In
-        document.getElementById('signin-btn').addEventListener('click', function() {
+        document.getElementById('signin-btn').addEventListener('click', function () {
             var email = document.getElementById('signin-email').value;
             var password = document.getElementById('signin-password').value;
             // alert(email+ "    "+password)
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/login');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     alert('User authenticated');
                     // Redirect or perform any other action
+                    localStorage.setItem("isSignedIn", "true")
+                    localStorage.setItem("profilePic", "public/Assets/images/other.jpg")
+
+                    if (window.top !== window.self) {
+                        window.top.location.href = 'action.html';
+                    } else {
+                        window.location.href = 'action.html';
+                    }
                 } else {
                     alert('Invalid email or password');
                 }
@@ -221,14 +247,14 @@
         });
 
         // Handle Sign-Up
-        document.getElementById('signup-btn').addEventListener('click', function() {
+        document.getElementById('signup-btn').addEventListener('click', function () {
             var username = document.getElementById('signup-username').value;
             var email = document.getElementById('signup-email').value;
             var password = document.getElementById('signup-password').value;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/signup');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     alert('User registered');
                     // Show sign-in form
@@ -252,7 +278,7 @@
             var profilePic = document.getElementById('profile-pic');
             profilePic.src = profile.getImageUrl();
             profilePic.alt = profile.getName();
-            
+
             document.getElementById('signin-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'none';
             document.getElementById('profile-container').style.display = 'block';
@@ -260,7 +286,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/google-signin');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     console.log('User authenticated with Google');
                     alert('User authenticated with Google');
@@ -271,14 +297,41 @@
             xhr.send(JSON.stringify({ id_token: id_token }));
         }
 
+        function initGoogleSignIn() {
+            gapi.load('auth2', function () {
+                var auth2 = gapi.auth2.init({
+                    client_id: '69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com',
+                    scope: 'profile email'
+                });
+
+                document.getElementById('google-signup-btn').addEventListener('click', function () {
+                    auth2.signIn().then(function (googleUser) {
+                        console.log(googleUser);
+                        var profile = googleUser.getBasicProfile();
+                        window.parent.postMessage({
+                            type: 'google-signup-success',
+                            profile: {
+                                id: profile.getId(),
+                                name: profile.getName(),
+                                imageUrl: profile.getImageUrl(),
+                                email: profile.getEmail()
+                            }
+                        }, '*');
+
+                    }, function (error) {
+                        console.error('Google sign-in error:', error);
+                    });
+                });
+            });
+        }
         // Show dropdown menu
-        document.getElementById('profile-pic').addEventListener('click', function() {
+        document.getElementById('profile-pic').addEventListener('click', function () {
             var dropdownMenu = document.getElementById('dropdown-menu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         });
 
         // Sign out
-        document.getElementById('sign-out').addEventListener('click', function() {
+        document.getElementById('sign-out').addEventListener('click', function () {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 alert('User signed out.');
@@ -287,7 +340,8 @@
             });
         });
     </script>
-        <script src="public\Assets\js\scripts.js"></script>
+    <script src="public\Assets\js\scripts.js"></script>
 
 </body>
+
 </html>

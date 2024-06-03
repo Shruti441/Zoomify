@@ -9,27 +9,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (signInButton && emailInput && passwordInput) {
         console.log("Sign In form elements found");
 
-        signInButton.addEventListener('click', (event) => {
-            event.preventDefault();  // Prevent default form submission
-            console.log("Sign In button clicked");
+        // signInButton.addEventListener('click', (event) => {
+        //     event.preventDefault();  // Prevent default form submission
+        //     console.log("Sign In button clicked");
 
-            const email = emailInput.value;
-            const password = passwordInput.value;
+        //     const email = emailInput.value;
+        //     const password = passwordInput.value;
 
-            console.log(`Email: ${email}, Password: ${password}`);
+        //     console.log(`Email: ${email}, Password: ${password}`);
 
-            // Mocking a successful sign-in process.
-            // In a real scenario, you would perform form validation and send a request to the server.
-            if (email && password) {
-                localStorage.setItem('isSignedIn', 'true');
-                localStorage.setItem('profilePic', 'public/Assets/images/other.jpg'); // Assuming a static profile picture for now
+        //     // Mocking a successful sign-in process.
+        //     // In a real scenario, you would perform form validation and send a request to the server.
+        //     if (email && password) {
+        //         localStorage.setItem('isSignedIn', 'true');
+        //         localStorage.setItem('profilePic', 'public/Assets/images/other.jpg'); // Assuming a static profile picture for now
 
-                // Assuming sign-in is successful, redirect to action.html
-                window.location.href = 'action.html';
-            } else {
-                alert("Please enter email and password");
-            }
-        });
+        //         // Assuming sign-in is successful, redirect to action.html
+        //         window.location.href = 'action.html';
+        //     } else {
+        //         alert("Please enter email and password");
+        //     }
+        // });
     } else {
         console.log("Sign In form elements not found, not on form.html");
     }
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.log("Navbar elements not found, not on action.html");
     }
-    
+
     logoutBtn.addEventListener("click",()=>{
         localStorage.setItem("isSignedIn","false");
         signInNavItem.style.display = ''; // Show the sign-in nav item
@@ -70,3 +70,4 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.classList.add("d-none")
     })
 });
+

@@ -154,6 +154,19 @@
                 profileImage.src = profilePic;
                 profileImage.classList.remove('d-none');
             }
+
+
+            const logoutBtn = document.getElementById("logoutBtn")
+            logoutBtn.addEventListener("click",()=>{
+                localStorage.setItem("isSignedIn", "false")
+                    const signInNavItem = document.getElementById('signin-nav-item');
+                    const profilePic = document.getElementById('profile-pic');
+                    signInNavItem.style.display = 'block'; // Hide the sign-in nav item
+                    profilePic.src = localStorage.getItem('profilePic');
+                    profilePic.classList.add('d-none');   // Show the profile picture
+                    logoutBtn.classList.add("d-none")
+            })
+
         });
 
         // Get the modal element
