@@ -8,7 +8,7 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="google-signin-client_id" content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
     <script>
         
     </script>
@@ -271,33 +271,6 @@
             xhr.send(JSON.stringify({ id_token: id_token }));
         }
 
-        function initGoogleSignIn() {
-            gapi.load('auth2', function() {
-                var auth2 = gapi.auth2.init({
-                    client_id: '69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com',
-                    scope: 'profile email'
-                });
-
-                document.getElementById('google-signup-btn').addEventListener('click', function() {
-                    auth2.signIn().then(function(googleUser) {
-                        console.log(googleUser);
-                        var profile = googleUser.getBasicProfile();
-                        window.parent.postMessage({
-                            type: 'google-signup-success',
-                            profile: {
-                                id: profile.getId(),
-                                name: profile.getName(),
-                                imageUrl: profile.getImageUrl(),
-                                email: profile.getEmail()
-                            }
-                        }, '*');
-                        
-                    }, function(error) {
-                        console.error('Google sign-in error:', error);
-                    });
-                });
-            });
-        }
         // Show dropdown menu
         document.getElementById('profile-pic').addEventListener('click', function() {
             var dropdownMenu = document.getElementById('dropdown-menu');
