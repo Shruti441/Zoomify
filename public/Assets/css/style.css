@@ -18,7 +18,7 @@ ul{
 nav{
     background-color: rgb(19, 180, 192);
     display: flex;
-    z-index: -1;
+    /* z-index: -1; */
 }
 
 .navbar-brand{
@@ -193,4 +193,13 @@ video{
     position: absolute;
     margin-bottom: 132px;
     display: none;
+}
+.d-none {
+    display: none;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }

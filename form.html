@@ -6,9 +6,12 @@
     <title>Sign In</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="google-signin-client_id" content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-
+    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
+    <script>
+        
+    </script>
     <style>
         body {
             display: flex;
@@ -82,6 +85,36 @@
         .g-signin2 {
             margin-bottom: 10px;
         }
+        #profile-container {
+            display: none;
+            position: relative;
+        }
+        #profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            text-align: left;
+            z-index: 1000;
+        }
+        #dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        #dropdown-menu a:hover {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -120,6 +153,14 @@
             </div>
             <button type="button" id="signup-btn">Sign Up</button>
             <div class="link" id="show-signin">Already have an account? Sign In</div>
+        </div>
+        <!-- Profile Container -->
+        <div id="profile-container">
+            <img id="profile-pic" src="" alt="Profile Picture">
+            <div id="dropdown-menu">
+                <a href="#" id="profile-details">Profile Details</a>
+                <a href="#" id="sign-out">Sign Out</a>
+            </div>
         </div>
     </div>
     <script>
@@ -164,6 +205,7 @@
         document.getElementById('signin-btn').addEventListener('click', function() {
             var email = document.getElementById('signin-email').value;
             var password = document.getElementById('signin-password').value;
+            // alert(email+ "    "+password)
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/login');
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -197,37 +239,23 @@
             };
             xhr.send(JSON.stringify({ username: username, email: email, password: password }));
         });
-        // google sign in 
+        // Handle Google Sign-In
         function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    var id_token = googleUser.getAuthResponse().id_token;
-
-    console.log('ID: ' + profile.getId());
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
-
-    // Send the ID token to your server
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/google-signin');
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log('User authenticated with Google');
-            alert('User authenticated with Google');
-            // Redirect or perform any other action
-        } else {
-            console.error('Error authenticating with Google');
-        }
-    };
-    xhr.send(JSON.stringify({ id_token: id_token }));
-}
-
-    </script>
-     <script>
-        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
             var id_token = googleUser.getAuthResponse().id_token;
-            console.log(id_token); // For debugging
+
+            console.log('ID: ' + profile.getId());
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail());
+
+            var profilePic = document.getElementById('profile-pic');
+            profilePic.src = profile.getImageUrl();
+            profilePic.alt = profile.getName();
+            
+            document.getElementById('signin-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'none';
+            document.getElementById('profile-container').style.display = 'block';
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/google-signin');
@@ -235,13 +263,31 @@
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     console.log('User authenticated with Google');
-                    // Handle successful authentication (e.g., redirect to another page)
+                    alert('User authenticated with Google');
                 } else {
-                    console.error('Error during Google authentication');
+                    console.error('Error authenticating with Google');
                 }
             };
             xhr.send(JSON.stringify({ id_token: id_token }));
         }
+
+        // Show dropdown menu
+        document.getElementById('profile-pic').addEventListener('click', function() {
+            var dropdownMenu = document.getElementById('dropdown-menu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Sign out
+        document.getElementById('sign-out').addEventListener('click', function() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                alert('User signed out.');
+                document.getElementById('profile-container').style.display = 'none';
+                document.getElementById('signin-form').style.display = 'block';
+            });
+        });
     </script>
+        <script src="public\Assets\js\scripts.js"></script>
+
 </body>
 </html>

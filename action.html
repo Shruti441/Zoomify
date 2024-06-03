@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="public/Assets/css/style.css">
     <style>
-        body{
+        body {
             overflow: hidden;
         }
         .profile-pic {
@@ -18,44 +18,37 @@
             height: 40px;
             border-radius: 50%;
         }
-        /* Style for the modal */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
         }
-
-        /* Modal content */
         .modal-content {
             background-color: #fefefe;
             padding: 20px;
             overflow: hidden;
             border: 1px solid #888;
-            width: 100%; /* Width set to 40% */
-            height: 100vh; /* Height set to 60% of viewport height */
+            width: 100%;
+            height: 100vh;
             box-sizing: border-box;
-            overflow-y: auto; /* Enable vertical scroll if needed */
+            overflow-y: auto;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
-        /* Close button */
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
-            max-height: 0;
         }
-
         .close:hover,
         .close:focus {
             color: black;
@@ -65,7 +58,6 @@
     </style>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="69134238941-jbal1meq93b3brcvngdbcsrfeng44qsl.apps.googleusercontent.com">
-
 </head>
 <body style="padding-top: 3.5rem;">
     <nav class="navbar navbar-expand-md fixed-top">
@@ -84,12 +76,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav mr-0">
-                
-                <li class="nav-item sign-in display-center">
+                <li class="nav-item sign-in display-center" id="signin-nav-item">
                     <a href="#" class="nav-link" id="signin-link">Sign in</a>
                 </li>
                 <li class="nav-item">
                     <img src="public/Assets/images/other.jpg" id="profile-pic" class="profile-pic d-none" alt="Profile Picture">
+                    <button id="logoutBtn" class="d-none">Log out</button>
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-secondary btn-lg text-info font-weight-bold join-meeting">Join the meeting</button>
@@ -107,18 +99,18 @@
                 <p style="font-size: 20px;">
                     We're redesigning the Zoomify service for secure business meetings and making it free for everyone to use.
                 </p>
-                <ul class="display-center justify-content-start" >
+                <ul class="display-center justify-content-start">
                     <li style="padding: 0;">
                         <button class="btn btn-lg text-light font-weight-bold display-center new-meeting" style="background-color: rgb(19, 180, 192);">
                             <span class="material-icons mr-2">video_call</span>New Meeting
                         </button>
                     </li>
                     <li class="pl-3">
-                        <button class="btn btn-outline-secondary text-dark font-weight-bold display-center" style="background-color: #ffffff;  box-shadow: 5px 10px 8px #888888; border: 2px solid black;">
+                        <button class="btn btn-outline-secondary text-dark font-weight-bold display-center" style="background-color: #ffffff; box-shadow: 5px 10px 8px #888888; border: 2px solid black;">
                             <span class="material-icons mr-2">keyboard</span><input type="text" placeholder="Enter a code" style="border: none;" class="enter-code">
                         </button>
                     </li>
-                    <li class="text-dark font-weight-bold cursor-pointer pl-2  ml-2  join-action">Join</li>
+                    <li class="text-dark font-weight-bold cursor-pointer pl-2 ml-2 join-action">Join</li>
                 </ul>
             </div>
             <div class="container w-50">
@@ -127,13 +119,12 @@
         </div>
         <div id="login-modal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal()" style="border-top-width: 0px;">&times;</span>
-                <!-- Login form content -->
+                <span class="close" onclick="closeModal()">&times;</span>
                 <iframe id="login-iframe" src="" frameborder="0" width="100%" height="100%"></iframe>
             </div>
         </div>
     </main>
-    <footer class="container"><h6>Learn more about <span class="learn-more text-info">Zoomify</span> .</h6></footer>
+    <footer class="container"><h6>Learn more about <span class="learn-more text-info">Zoomify</span>.</h6></footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(function(){
@@ -165,98 +156,44 @@
             }
         });
 
-
         // Get the modal element
         var modal = document.getElementById("login-modal");
 
         // Get the button that opens the modal
         var signInLink = document.getElementById("signin-link");
 
-
         // When the user clicks on the sign-in link, open the modal
         signInLink.onclick = function() {
-            // Set the source of the iframe to the login form page
             document.getElementById("login-iframe").src = "form.html";
             modal.style.display = "block";
-            var modalContent = document.querySelector('.modal-content');
-            modalContent.style.top = "50%";
-            modalContent.style.left = "50%";
-            modalContent.style.transform = "translate(-50%, -50%)";
         }
 
-        // When the user clicks on <span> (x), close the modal
-            function closeModal() {
+        function closeModal() {
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
 
-
-       // Listen for the message from the login iframe
-       window.addEventListener('message', function(event) {
-    console.log('Received message:', event.data);
-    if (event.data === 'login-success') {
-        console.log('User authenticated successfully!');
-        // Set the sign-in status to true
-        sessionStorage.setItem('isSignedIn', 'true');
-
-        // Get the profile picture URL
-        var profilePicUrl = 'public/Assets/images/other.jpg'; // Replace with the actual URL of the user's profile picture
-        console.log('Profile picture URL:', profilePicUrl);
-
-        // Update the sign-in link with the profile picture
-        var signinLink = document.getElementById("signin-link");
-        console.log('Sign-in link:', signinLink);
-        signinLink.innerHTML = '<img id="profile-pic" src="' + profilePicUrl + '" alt="Profile Picture">';
-
-        // Optionally, set href to a profile or dashboard page
-        signinLink.href = "#"; 
-
-        // Optionally, you can also show an alert message
-        alert("User authenticated successfully!");
-
-        // Close the modal
-        closeModal();
-    }
-});
-
-
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            var id_token = googleUser.getAuthResponse().id_token;
-            console.log(id_token); // For debugging
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/google-signin');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    console.log('User authenticated with Google');
-                    // Handle successful authentication (e.g., redirect to another page)
-
-                    // Store profile picture URL and sign-in status
-                    var profilePicUrl = profile.getImageUrl();
-                    sessionStorage.setItem('isSignedIn', 'true');
-                    sessionStorage.setItem('profilePic', profilePicUrl);
-
-                    // Update the sign-in link
-                    var signinLink = document.getElementById("signin-link");
-                    signinLink.classList.add('d-none');
-                    var profileImage = document.getElementById("profile-pic");
-                    profileImage.src = profilePicUrl;
-                    profileImage.classList.remove('d-none');
-                } else {
-                    console.error('Error during Google authentication');
-                }
-            };
-            xhr.send(JSON.stringify({ id_token: id_token }));
-        }
-
+        // Listen for the message from the login iframe
+        window.addEventListener('message', function(event) {
+            if (event.data === 'login-success') {
+                sessionStorage.setItem('isSignedIn', 'true');
+                var profilePicUrl = 'public/Assets/images/other.jpg'; // Replace with the actual URL of the user's profile picture
+                sessionStorage.setItem('profilePic', profilePicUrl);
+                var signinLink = document.getElementById("signin-link");
+                signinLink.classList.add('d-none');
+                var profileImage = document.getElementById("profile-pic");
+                profileImage.src = profilePicUrl;
+                profileImage.classList.remove('d-none');
+                alert("User authenticated successfully!");
+                closeModal();
+            }
+        });
     </script>
+    <script src="public/Assets/js/scripts.js"></script>
 </body>
 </html>

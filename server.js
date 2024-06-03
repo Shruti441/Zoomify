@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const fs = require("fs");
 const fileUpload = require("express-fileupload");
+const {Pool} = require("pg")
 
 const app = express();
 const server = app.listen(3000, function () {
@@ -20,28 +21,60 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 // Create connection to MySQL database
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'zoomify'
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: 'root',
+//   database: 'zoomify'
+// });
+
+const pool = new Pool({
+  user: 'default',
+  host: 'ep-lucky-voice-a4e08axq-pooler.us-east-1.aws.neon.tech',
+  database: 'verceldb',
+  password: 'dV6IjHv4uEOy',
+  port: 5432,  // default port for PostgreSQL
+  ssl: {
+    rejectUnauthorized: false  // You can customize this based on your requirements
+  }
+});
+
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('Error connecting to PostgreSQL:', err);
+  } else {
+    console.log('PostgreSQL connected successfully');
+    pool.query("CREATE TABLE if not exists signup (id SERIAL PRIMARY KEY, username VARCHAR(255) NOT NULL unique,email VARCHAR(255) NOT NULL , password VARCHAR(255) NOT NULL, google_id VARCHAR(255) default null);").then(()=>{
+console.log("signup table created");
+    }).catch((error)=>{
+console.log("error signup table" ,error);
+    })
+
+    pool.query("CREATE TABLE if not exists logindetails (id SERIAL PRIMARY KEY,email VARCHAR(255) NOT NULL , password VARCHAR(255) NOT NULL);").then(()=>{
+      console.log("login details table created");
+          }).catch((error)=>{
+      console.log("error logindetails table" ,error);
+          })
+  }
+  release();  // Release the client back to the pool
 });
 
 // Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
-  }
-  console.log('MySQL connected...');
-});
+// db.connect((err) => {
+//   if (err) {
+//     console.error('Error connecting to MySQL:', err);
+//     return;
+//   }
+//   console.log('MySQL connected...');
+// });
 
 
 // Route to handle sign-up
 app.post('/signup', (req, res) => {
   const { username, email, password } = req.body;
-  const sqlInsert = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
-  db.query(sqlInsert, [username, email, password], (err, result) => {
+  // const sqlInsert = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
+  const sqlInsert = 'INSERT INTO signup (username, email, password) VALUES ($1, $2, $3)';
+   pool.query(sqlInsert, [username, email, password], (err, result) => {
     if (err) {
       console.error('Error inserting user into database:', err);
       res.status(500).send('Error inserting user into database');
@@ -55,18 +88,21 @@ app.post('/signup', (req, res) => {
 // Route to handle sign-in
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const sqlSelect = 'SELECT * FROM signup WHERE email = ? AND password = ?';
-  db.query(sqlSelect, [email, password], (err, results) => {
+  // console.log(email+ " " + password);
+  // const sqlSelect = 'SELECT * FROM signup WHERE email = ? AND password = ?';
+  const sqlSelect = 'SELECT * FROM signup WHERE email = $1 AND password = $2';
+  pool.query(sqlSelect, [email, password], (err, results) => {
     if (err) {
       console.error('Error querying database:', err);
       res.status(500).send('Error querying database');
       return;
     }
-    if (results.length > 0) {
-      console.log('User authenticated');
+    // console.log(results)
+    if (results.rowCount > 0) {
+      // console.log('User authenticated');
       res.status(200).send('User authenticated');
     } else {
-      console.log('Invalid email or password');
+      // console.log('Invalid email or password');
       res.status(401).send('Invalid email or password');
     }
   });
@@ -91,8 +127,9 @@ app.post('/google-signin', async (req, res) => {
         const { email, name, sub: googleId } = payload;
 
         // Check if user exists in the database
-        const sqlSelect = 'SELECT * FROM signup WHERE email = ? OR google_id = ?';
-        db.query(sqlSelect, [email, googleId], (err, results) => {
+        // const sqlSelect = 'SELECT * FROM signup WHERE email = ? OR google_id = ?';
+        const sqlSelect = 'SELECT * FROM signup WHERE email = $1 OR google_id = $2';
+        pool.query(sqlSelect, [email, googleId], (err, results) => {
             if (err) {
                 console.error('Error querying database:', err);
                 res.status(500).send('Error querying database');
@@ -104,8 +141,9 @@ app.post('/google-signin', async (req, res) => {
                 res.status(200).send('User authenticated with Google');
             } else {
                 // User does not exist, register the user
-                const sqlInsert = 'INSERT INTO signup (username, email, google_id) VALUES (?, ?, ?)';
-                db.query(sqlInsert, [name, email, googleId], (err, result) => {
+                // const sqlInsert = 'INSERT INTO signup (username, email, google_id) VALUES (?, ?, ?)';
+                const sqlInsert = 'INSERT INTO signup (username, email, google_id) VALUES ($1, $2, $3)';
+                pool.query(sqlInsert, [name, email, googleId], (err, result) => {
                     if (err) {
                         console.error('Error inserting user into database:', err);
                         res.status(500).send('Error inserting user into database');
@@ -244,3 +282,4 @@ app.post("/attachimg", function (req, res) {
     }
   );
 });
+
