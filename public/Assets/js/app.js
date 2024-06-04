@@ -387,6 +387,23 @@ var MyApp = (function () {
       $("#participant_" + data.connId + "").remove();
       AppProcess.closeConnectionCall(data.connId);
     });
+    socket.on('update_user_list', (userConnections) => {
+      const recipientSelect = $('#recipientSelect');
+      recipientSelect.empty(); // Clear the existing options
+
+      // Add an option for everyone
+      recipientSelect.append($('<option>', {
+        value: 'everyone',
+        text: 'Everyone'
+      }));
+
+      userConnections.forEach(user => {
+        recipientSelect.append($('<option>', {
+          value: user.connectionId,
+          text: user.user_id 
+        }));
+   });
+});
     // <!-- .....................HandRaise .................-->
 
     socket.on("HandRaise_info_for_others", function (data) {
@@ -476,26 +493,54 @@ var MyApp = (function () {
       }
     });
     // <!-- ......................HandRaise ...............-->
+    // $("#btnsend").on("click", function () {
+    //   var msgData = $("#msgbox").val();
+    //   socket.emit("sendMessage", msgData);
+    //   var time = new Date();
+    //   var lTime = time.toLocaleString("en-US", {
+    //     hour: "numeric",
+    //     minute: "numeric",
+    //     hour12: true,
+    //   });
+    //   var div = $("<div>").html(
+    //     "<span class='font-weight-bold mr-3' style='color:black'>" +
+    //       user_id +
+    //       "</span>" +
+    //       lTime +
+    //       "</br>" +
+    //       msgData
+    //   );
+    //   $("#messages").append(div);
+    //   $("#msgbox").val("");
+    // });
     $("#btnsend").on("click", function () {
-      var msgData = $("#msgbox").val();
-      socket.emit("sendMessage", msgData);
-      var time = new Date();
-      var lTime = time.toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      });
-      var div = $("<div>").html(
-        "<span class='font-weight-bold mr-3' style='color:black'>" +
-          user_id +
-          "</span>" +
-          lTime +
-          "</br>" +
-          msgData
-      );
-      $("#messages").append(div);
-      $("#msgbox").val("");
-    });
+      $('#send-to-show').show(300);
+      $('#recipientSelect').change(function(){
+        var to = $('#recipientSelect').val();//mycode
+      
+        var msgData = $("#msgbox").val();
+        //socket.emit("sendMessage", msgData);
+        socket.emit("sendMessage", msgData,to);
+        var time = new Date();
+        var lTime = time.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        });
+        var div = $("<div>").html(
+          "<span class='font-weight-bold mr-3' style='color:black'>" +
+            user_id +
+            "</span>" +
+            lTime +
+            "</br>" +
+            msgData
+        );
+        $("#messages").append(div);
+        $("#msgbox").val("");
+        $('#send-to-show').hide(300);
+      })
+
+});
 
     var url = window.location.href;
     $(".meeting_url").text(url);

@@ -186,6 +186,7 @@ io.on("connection", (socket) => {
       });
     });
     socket.emit("inform_me_about_other_user", other_users);
+    io.emit('update_user_list', userConnections);
   });
   socket.on("SDPProcess", (data) => {
     socket.to(data.to_connid).emit("SDPProcess", {
@@ -193,21 +194,45 @@ io.on("connection", (socket) => {
       from_connid: socket.id,
     });
   });
-  socket.on("sendMessage", (msg) => {
+  // socket.on("sendMessage", (msg) => {
+  //   console.log(msg);
+  //   var mUser = userConnections.find((p) => p.connectionId == socket.id);
+  //   if (mUser) {
+  //     var meetingid = mUser.meeting_id;
+  //     var from = mUser.user_id;
+  //     var list = userConnections.filter((p) => p.meeting_id == meetingid);
+  //     list.forEach((v) => {
+  //       socket.to(v.connectionId).emit("showChatMessage", {
+  //         from: from,
+  //         message: msg,
+  //       });
+  //     });
+  //   }
+  // });
+  //for private chat with group chat 
+  socket.on("sendMessage",(msg,to)=>{
+
     console.log(msg);
     var mUser = userConnections.find((p) => p.connectionId == socket.id);
-    if (mUser) {
+
       var meetingid = mUser.meeting_id;
-      var from = mUser.user_id;
-      var list = userConnections.filter((p) => p.meeting_id == meetingid);
-      list.forEach((v) => {
-        socket.to(v.connectionId).emit("showChatMessage", {
-          from: from,
-          message: msg,
-        });
+       var from = mUser.user_id;
+    if(to==="everyone" && mUser){
+      
+       var list = userConnections.filter((p) => p.meeting_id == meetingid);
+       list.forEach((v) => {
+         socket.to(v.connectionId).emit("showChatMessage", {
+           from: from,
+           message: msg,
+         });
       });
-    }
-  });
+    }else{
+      socket.to(to).emit("showChatMessage",{
+        from: from,
+        message: msg,
+    });
+}
+})
   socket.on("fileTransferToOther", (msg) => {
     console.log(msg);
     var mUser = userConnections.find((p) => p.connectionId == socket.id);
