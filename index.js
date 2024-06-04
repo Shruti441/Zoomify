@@ -68,6 +68,9 @@ console.log("error signup table" ,error);
 //   console.log('MySQL connected...');
 // });
 
+app.get("/server",(req,res)=>{
+  res.json({"msg":"server is running"})
+})
 
 // Route to handle sign-up
 app.post('/signup', (req, res) => {
