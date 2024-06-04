@@ -211,7 +211,7 @@ io.on("connection", (socket) => {
   // });
   //for private chat with group chat 
   socket.on("sendMessage",(msg,to)=>{
-
+    if (msg.trim() === '') return;
     console.log(msg);
     var mUser = userConnections.find((p) => p.connectionId == socket.id);
 

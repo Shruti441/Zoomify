@@ -382,6 +382,7 @@ var MyApp = (function () {
       }
     });
     socket.on("inform_other_about_disconnected_user", function (data) {
+      
       $("#" + data.connId).remove();
       $(".participant-count").text(data.uNumber);
       $("#participant_" + data.connId + "").remove();
@@ -391,6 +392,12 @@ var MyApp = (function () {
       const recipientSelect = $('#recipientSelect');
       recipientSelect.empty(); // Clear the existing options
 
+      recipientSelect.append($('<option>', {
+        value: '',
+        text: 'Select a recipient',
+        disabled: true,
+        selected: true
+}));
       // Add an option for everyone
       recipientSelect.append($('<option>', {
         value: 'everyone',
@@ -520,6 +527,7 @@ var MyApp = (function () {
       
         var msgData = $("#msgbox").val();
         //socket.emit("sendMessage", msgData);
+        if (msgData.trim() === '') return;
         socket.emit("sendMessage", msgData,to);
         var time = new Date();
         var lTime = time.toLocaleString("en-US", {
